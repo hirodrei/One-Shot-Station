@@ -35,10 +35,14 @@ typedef enum {
 	B,
 	L,
 	R,
+	ZL,
 	ZR,
 	PLUS,
+	CAPTURE,
 	NOTHING,
-	TRIGGERS
+	TRIGGERS,
+	LOOP,
+	LOOPEND
 } Buttons_t;
 
 typedef struct {
@@ -56,7 +60,9 @@ static const command step[] = {
   	{ NOTHING,  150 },
   	{ A,         20 },
   	{ NOTHING,  250 },
-  
+
+	{ LOOP,      25 },
+
   	// バツチー郡駅クリアループを25回。もっと綺麗にfor文とかで書きたいんですけどやり方が分かりませんでした助けて
   	{ X,         20 }, 
   	{ NOTHING,   10 },
@@ -71,370 +77,12 @@ static const command step[] = {
   	{ NOTHING,  180 },
   	// 少しだけ左に視点をずらす。これは往復してきた風船を狙うため。往復なしでもクリア可能だが、タイミングがシビアすぎてプログラミングでは対応不可能。
   	// スティックを右に入力するか左に入力するかは、ノーマルカメラかリバースカメラかによって変更する
-  	{ R_RIGHT,  0.8 },
+  	{ R_LEFT,   0.8 },
   	{ ZR,       177 },
   	{ NOTHING,  640 },
-  	
-  	{ X,         20 }, 
-  	{ NOTHING,   10 },
-  	{ A,         10 },
-  	{ NOTHING,   10 },
-  	{ A,         20 },
-  	{ NOTHING,  360 },
-  	{ A,         20 },
-  	{ NOTHING,   30 },
-  	{ UP,        80 },
-  	{ A,         20 },
-  	{ NOTHING,  180 },
-  	{ R_RIGHT,  0.8 },
-  	{ ZR,       177 },
-  	{ NOTHING,  640 },
-  	
-  	{ X,         20 }, 
-  	{ NOTHING,   10 },
-  	{ A,         10 },
-  	{ NOTHING,   10 },
-  	{ A,         20 },
-  	{ NOTHING,  360 },
-  	{ A,         20 },
-  	{ NOTHING,   30 },
-  	{ UP,        80 },
-  	{ A,         20 },
-  	{ NOTHING,  180 },
-  	{ R_RIGHT,  0.8 },
-  	{ ZR,       177 },
-  	{ NOTHING,  640 },
-  
-  	{ X,         20 }, 
-  	{ NOTHING,   10 },
-  	{ A,         10 },
-  	{ NOTHING,   10 },
-  	{ A,         20 },
-  	{ NOTHING,  360 },
-  	{ A,         20 },
-  	{ NOTHING,   30 },
-  	{ UP,        80 },
-  	{ A,         20 },
-  	{ NOTHING,  180 },
-  	{ R_RIGHT,  0.8 },
-  	{ ZR,       177 },
-  	{ NOTHING,  640 },
-  
-  	{ X,         20 }, 
-  	{ NOTHING,   10 },
-  	{ A,         10 },
-  	{ NOTHING,   10 },
-  	{ A,         20 },
-  	{ NOTHING,  360 },
-  	{ A,         20 },
-  	{ NOTHING,   30 },
-  	{ UP,        80 },
-  	{ A,         20 },
-  	{ NOTHING,  180 },
-  	{ R_RIGHT,  0.8 },
-  	{ ZR,       177 },
-  	{ NOTHING,  640 },
-  
-  	{ X,         20 }, 
-  	{ NOTHING,   10 },
-  	{ A,         10 },
-  	{ NOTHING,   10 },
-  	{ A,         20 },
-  	{ NOTHING,  360 },
-  	{ A,         20 },
-  	{ NOTHING,   30 },
-  	{ UP,        80 },
-  	{ A,         20 },
-  	{ NOTHING,  180 },
-  	{ R_RIGHT,  0.8 },
-  	{ ZR,       177 },
-  	{ NOTHING,  640 },
-  
-  	{ X,         20 }, 
-  	{ NOTHING,   10 },
-  	{ A,         10 },
-  	{ NOTHING,   10 },
-  	{ A,         20 },
-  	{ NOTHING,  360 },
-  	{ A,         20 },
-  	{ NOTHING,   30 },
-  	{ UP,        80 },
-  	{ A,         20 },
-  	{ NOTHING,  180 },
-  	{ R_RIGHT,  0.8 },
-  	{ ZR,       177 },
-  	{ NOTHING,  640 },
-  
-  	{ X,         20 }, 
-  	{ NOTHING,   10 },
-  	{ A,         10 },
-  	{ NOTHING,   10 },
-  	{ A,         20 },
-  	{ NOTHING,  360 },
-  	{ A,         20 },
-  	{ NOTHING,   30 },
-  	{ UP,        80 },
-  	{ A,         20 },
-  	{ NOTHING,  180 },
-  	{ R_RIGHT,  0.8 },
-  	{ ZR,       177 },
-  	{ NOTHING,  640 },
-  
-  	{ X,         20 }, 
-  	{ NOTHING,   10 },
-  	{ A,         10 },
-  	{ NOTHING,   10 },
-  	{ A,         20 },
-  	{ NOTHING,  360 },
-  	{ A,         20 },
-  	{ NOTHING,   30 },
-  	{ UP,        80 },
-  	{ A,         20 },
-  	{ NOTHING,  180 },
-  	{ R_RIGHT,  0.8 },
-  	{ ZR,       177 },
-  	{ NOTHING,  640 },
-  
-  	{ X,         20 }, 
-  	{ NOTHING,   10 },
-  	{ A,         10 },
-  	{ NOTHING,   10 },
-  	{ A,         20 },
-  	{ NOTHING,  360 },
-  	{ A,         20 },
-  	{ NOTHING,   30 },
-  	{ UP,        80 },
-  	{ A,         20 },
-  	{ NOTHING,  180 },
-  	{ R_RIGHT,  0.8 },
-  	{ ZR,       177 },
-  	{ NOTHING,  640 },
-  
-  	{ X,         20 }, 
-  	{ NOTHING,   10 },
-  	{ A,         10 },
-  	{ NOTHING,   10 },
-  	{ A,         20 },
-  	{ NOTHING,  360 },
-  	{ A,         20 },
-  	{ NOTHING,   30 },
-  	{ UP,        80 },
-  	{ A,         20 },
-  	{ NOTHING,  180 },
-  	{ R_RIGHT,  0.8 },
-  	{ ZR,       177 },
-  	{ NOTHING,  640 },
-  
-  	{ X,         20 }, 
-  	{ NOTHING,   10 },
-  	{ A,         10 },
-  	{ NOTHING,   10 },
-  	{ A,         20 },
-  	{ NOTHING,  360 },
-  	{ A,         20 },
-  	{ NOTHING,   30 },
-  	{ UP,        80 },
-  	{ A,         20 },
-  	{ NOTHING,  180 },
-  	{ R_RIGHT,  0.8 },
-  	{ ZR,       177 },
-  	{ NOTHING,  640 },
-  
-  	{ X,         20 }, 
-  	{ NOTHING,   10 },
-  	{ A,         10 },
-  	{ NOTHING,   10 },
-  	{ A,         20 },
-  	{ NOTHING,  360 },
-  	{ A,         20 },
-  	{ NOTHING,   30 },
-  	{ UP,        80 },
-  	{ A,         20 },
-  	{ NOTHING,  180 },
-  	{ R_RIGHT,  0.8 },
-  	{ ZR,       177 },
-  	{ NOTHING,  640 },
-  
-  	{ X,         20 }, 
-  	{ NOTHING,   10 },
-  	{ A,         10 },
-  	{ NOTHING,   10 },
-  	{ A,         20 },
-  	{ NOTHING,  360 },
-  	{ A,         20 },
-  	{ NOTHING,   30 },
-  	{ UP,        80 },
-  	{ A,         20 },
-  	{ NOTHING,  180 },
-  	{ R_RIGHT,  0.8 },
-  	{ ZR,       177 },
-  	{ NOTHING,  640 },
-  	
-  	{ X,         20 }, 
-  	{ NOTHING,   10 },
-  	{ A,         10 },
-  	{ NOTHING,   10 },
-  	{ A,         20 },
-  	{ NOTHING,  360 },
-  	{ A,         20 },
-  	{ NOTHING,   30 },
-  	{ UP,        80 },
-  	{ A,         20 },
-  	{ NOTHING,  180 },
-  	{ R_RIGHT,  0.8 },
-  	{ ZR,       177 },
-  	{ NOTHING,  640 },
-  
-  	{ X,         20 }, 
-  	{ NOTHING,   10 },
-  	{ A,         10 },
-  	{ NOTHING,   10 },
-  	{ A,         20 },
-  	{ NOTHING,  360 },
-  	{ A,         20 },
-  	{ NOTHING,   30 },
-  	{ UP,        80 },
-  	{ A,         20 },
-  	{ NOTHING,  180 },
-  	{ R_RIGHT,  0.8 },
-  	{ ZR,       177 },
-  	{ NOTHING,  640 },
-  
-  	{ X,         20 }, 
-  	{ NOTHING,   10 },
-  	{ A,         10 },
-  	{ NOTHING,   10 },
-  	{ A,         20 },
-  	{ NOTHING,  360 },
-  	{ A,         20 },
-  	{ NOTHING,   30 },
-  	{ UP,        80 },
-  	{ A,         20 },
-  	{ NOTHING,  180 },
-  	{ R_RIGHT,  0.8 },
-  	{ ZR,       177 },
-  	{ NOTHING,  640 },
-  
-  	{ X,         20 }, 
-  	{ NOTHING,   10 },
-  	{ A,         10 },
-  	{ NOTHING,   10 },
-  	{ A,         20 },
-  	{ NOTHING,  360 },
-  	{ A,         20 },
-  	{ NOTHING,   30 },
-  	{ UP,        80 },
-  	{ A,         20 },
-  	{ NOTHING,  180 },
-  	{ R_RIGHT,  0.8 },
-  	{ ZR,       177 },
-  	{ NOTHING,  640 },
-  
-  	{ X,         20 }, 
-  	{ NOTHING,   10 },
-  	{ A,         10 },
-  	{ NOTHING,   10 },
-  	{ A,         20 },
-  	{ NOTHING,  360 },
-  	{ A,         20 },
-  	{ NOTHING,   30 },
-  	{ UP,        80 },
-  	{ A,         20 },
-  	{ NOTHING,  180 },
-  	{ R_RIGHT,  0.8 },
-  	{ ZR,       177 },
-  	{ NOTHING,  640 },
-  
-  	{ X,         20 }, 
-  	{ NOTHING,   10 },
-  	{ A,         10 },
-  	{ NOTHING,   10 },
-  	{ A,         20 },
-  	{ NOTHING,  360 },
-  	{ A,         20 },
-  	{ NOTHING,   30 },
-  	{ UP,        80 },
-  	{ A,         20 },
-  	{ NOTHING,  180 },
-  	{ R_RIGHT,  0.8 },
-  	{ ZR,       177 },
-  	{ NOTHING,  640 },
-  
-  	{ X,         20 }, 
-  	{ NOTHING,   10 },
-  	{ A,         10 },
-  	{ NOTHING,   10 },
-  	{ A,         20 },
-  	{ NOTHING,  360 },
-  	{ A,         20 },
-  	{ NOTHING,   30 },
-  	{ UP,        80 },
-  	{ A,         20 },
-  	{ NOTHING,  180 },
-  	{ R_RIGHT,  0.8 },
-  	{ ZR,       177 },
-  	{ NOTHING,  640 },
-  
-  	{ X,         20 }, 
-  	{ NOTHING,   10 },
-  	{ A,         10 },
-  	{ NOTHING,   10 },
-  	{ A,         20 },
-  	{ NOTHING,  360 },
-  	{ A,         20 },
-  	{ NOTHING,   30 },
-  	{ UP,        80 },
-  	{ A,         20 },
-  	{ NOTHING,  180 },
-  	{ R_RIGHT,  0.8 },
-  	{ ZR,       177 },
-  	{ NOTHING,  640 },
-  
-  	{ X,         20 }, 
-  	{ NOTHING,   10 },
-  	{ A,         10 },
-  	{ NOTHING,   10 },
-  	{ A,         20 },
-  	{ NOTHING,  360 },
-  	{ A,         20 },
-  	{ NOTHING,   30 },
-  	{ UP,        80 },
-  	{ A,         20 },
-  	{ NOTHING,  180 },
-  	{ R_RIGHT,  0.8 },
-  	{ ZR,       177 },
-  	{ NOTHING,  640 },
-  
-  	{ X,         20 }, 
-  	{ NOTHING,   10 },
-  	{ A,         10 },
-  	{ NOTHING,   10 },
-  	{ A,         20 },
-  	{ NOTHING,  360 },
-  	{ A,         20 },
-  	{ NOTHING,   30 },
-  	{ UP,        80 },
-  	{ A,         20 },
-  	{ NOTHING,  180 },
-  	{ R_RIGHT,  0.8 },
-  	{ ZR,       177 },
-  	{ NOTHING,  640 },
-  
-  	{ X,         20 }, 
-  	{ NOTHING,   10 },
-  	{ A,         10 },
-  	{ NOTHING,   10 },
-  	{ A,         20 },
-  	{ NOTHING,  360 },
-  	{ A,         20 },
-  	{ NOTHING,   30 },
-  	{ UP,        80 },
-  	{ A,         20 },
-  	{ NOTHING,  180 },
-  	{ R_RIGHT,  0.8 },
-  	{ ZR,       177 },
-  	{ NOTHING,  640 },
-  	
+
+	{ LOOPEND,    0 },
+
   	// バツチー郡駅から自販機まで移動
   	// マップを開く
   	{ X,         20 }, 
@@ -483,6 +131,8 @@ static const command step[] = {
   	{ NOTHING,   10 },
   	{ A,          5 },
   	{ NOTHING,  150 },
+  	{ CAPTURE,    5 },
+  	{ NOTHING,   10 },
   	{ A,          5 },
   	{ NOTHING,   20 },
 	
@@ -507,18 +157,19 @@ static const command step[] = {
 	{ NOTHING,   10 },
 	{ RIGHT,      5 },
 	{ NOTHING,   10 },
-	{ A,          5 },
-	{ NOTHING,   10 },
-	{ A,         20 },
-	{ NOTHING,  360 },
-	{ A,          5 },
-	{ NOTHING,   30 },
-	{ PLUS,       5 },
-	{ NOTHING,   10 },
-	{ DOWN,       5 },
-	{ NOTHING,   10 },
-	{ A,         20 },
-	{ NOTHING,  200 }
+	// バツチー郡駅クリアループ
+  	{ A,         10 },
+  	{ NOTHING,   10 },
+  	{ A,         20 },
+ 	{ NOTHING,  360 },
+  	{ A,         20 },
+  	{ NOTHING,   30 },
+  	{ UP,        80 },
+  	{ A,         20 },
+  	{ NOTHING,  180 },
+  	{ R_LEFT,   0.8 },
+  	{ ZR,       177 },
+  	{ NOTHING,  640 }
 };
 
 // Main entry point.
@@ -631,6 +282,14 @@ void HID_Task(void) {
 	}
 }
 
+int find_loop_start_step(void) {
+	int i;
+	for(i=0;i<(int)(sizeof(step)/sizeof(step[0]))-1;i++) {
+		if(step[i].button == LOOP) return i;
+	}
+	return 0;
+}
+
 typedef enum {
 	SYNC_CONTROLLER,
 	SYNC_POSITION,
@@ -651,6 +310,8 @@ int ypos = 0;
 int bufindex = 0;
 int duration_count = 0;
 int portsval = 0;
+int loop_count = 0;
+int number_of_loop = 0;
 
 // Prepare the next report for the host.
 void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
@@ -678,32 +339,6 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 		case SYNC_CONTROLLER:
 			state = BREATHE;
 			break;
-
-		// case SYNC_CONTROLLER:
-		// 	if (report_count > 550)
-		// 	{
-		// 		report_count = 0;
-		// 		state = SYNC_POSITION;
-		// 	}
-		// 	else if (report_count == 250 || report_count == 300 || report_count == 325)
-		// 	{
-		// 		ReportData->Button |= SWITCH_L | SWITCH_R;
-		// 	}
-		// 	else if (report_count == 350 || report_count == 375 || report_count == 400)
-		// 	{
-		// 		ReportData->Button |= SWITCH_A;
-		// 	}
-		// 	else
-		// 	{
-		// 		ReportData->Button = 0;
-		// 		ReportData->LX = STICK_CENTER;
-		// 		ReportData->LY = STICK_CENTER;
-		// 		ReportData->RX = STICK_CENTER;
-		// 		ReportData->RY = STICK_CENTER;
-		// 		ReportData->HAT = HAT_CENTER;
-		// 	}
-		// 	report_count++;
-		// 	break;
 
 		case SYNC_POSITION:
 			bufindex = 0;
@@ -777,8 +412,16 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 					ReportData->Button |= SWITCH_Y;
 					break;
 
+				case L:
+					ReportData->Button |= SWITCH_L;
+					break;
+
 				case R:
 					ReportData->Button |= SWITCH_R;
+					break;
+
+				case ZL:
+					ReportData->Button |= SWITCH_ZL;
 					break;
 
 				case ZR:
@@ -789,8 +432,20 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 					ReportData->Button |= SWITCH_PLUS;
 					break;
 
+				case CAPTURE:
+					ReportData->Button |= SWITCH_CAPTURE;
+					break;
+
 				case TRIGGERS:
 					ReportData->Button |= SWITCH_L | SWITCH_R;
+					break;
+
+				case LOOP:
+					number_of_loop = (int)step[bufindex].duration;
+					break;
+
+				case LOOPEND:
+					loop_count++;
 					break;
 
 				default:
@@ -803,20 +458,29 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 			}
 
 			duration_count++;
-
-			if (duration_count > step[bufindex].duration)
+			
+			if(step[bufindex].button == LOOPEND)
+			{
+				if(loop_count < number_of_loop)
+				{
+					bufindex = find_loop_start_step();
+				} else {
+					loop_count = 0;
+				}
+			}
+			
+			if (step[bufindex].button == LOOP || duration_count > step[bufindex].duration)
 			{
 				bufindex++;
 				duration_count = 0;				
 			}
-
 
 			if (bufindex > (int)( sizeof(step) / sizeof(step[0])) - 1)
 			{
 
 				// state = CLEANUP;
 
-				bufindex = 7;
+				bufindex = find_loop_start_step();
 				duration_count = 0;
 
 				state = BREATHE;
